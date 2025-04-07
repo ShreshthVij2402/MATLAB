@@ -1,0 +1,28 @@
+Temp = 120; % Temperature in Celsius
+Pressure = [2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000]; %stress in psi
+LC_initial = [a, b, c, d, e];
+num_cycles = 8; % original + 3 extra cycles
+k = 0.10; % Decay constant
+
+LC_cycles = zeros(length(LC_initial), num_cycles);
+for i = 1:length(LC_initial)
+    for j = 1:num_cycles
+        LC_cycles(i, j) = LC_initial(i) * exp(-k * (j-1));
+    end
+end
+
+disp('Fracture Conductivity Over 8 Cycles with Increasing Stress:');
+disp(array2table(LC_cycles, 'VariableNames', {'Cycle_1', 'Cycle_2', 'Cycle_3', 'Cycle_4', 'Cycle_5', 'Cycle_6', 'Cycle_7', 'Cycle_8'}));
+
+figure;
+hold on;
+colors = lines(length(LC_initial));
+for i = 1:length(LC_initial)
+    plot(1:num_cycles, LC_cycles(i, :), '-o', 'Color', colors(i, :), 'LineWidth', 2, 'DisplayName', sprintf('%d psi', Pressure(i)));
+end
+xlabel('Cycle Number');
+ylabel('Fracture Conductivity (mD-ft)');
+title('Exponential Decay of Fracture Conductivity with Increasing Stress');
+legend show;
+grid on;
+hold off;
