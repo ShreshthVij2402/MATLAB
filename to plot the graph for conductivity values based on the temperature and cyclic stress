@@ -1,0 +1,30 @@
+Temp = [60, 120]; 
+Pressure = [2000, 4000, 6000, 8000, 10000]; 
+LC_initial = [ a, b, c, d, e]; 
+num_cycles = 5;
+decay_factor_120 = 0.85; % 15% reduction per cycle at 120°C
+ 
+
+LC_cycles_120 = zeros(length(LC_initial), num_cycles);
+for i = 1:length(LC_initial)
+    for j = 1:num_cycles
+        LC_cycles_120(i, j) = LC_initial(i) * (decay_factor_120^(j-1));
+    end
+end
+
+disp('Fracture Conductivity Over 5 Cycles at 120°C:');
+disp(array2table(LC_cycles_120, 'VariableNames', {'Cycle_1', 'Cycle_2', 'Cycle_3', 'Cycle_4', 'Cycle_5'}));
+
+
+figure;
+hold on;
+colors = lines(length(LC_initial));
+for i = 1:length(LC_initial)
+    plot(1:num_cycles, LC_cycles_120(i, :), '-o', 'Color', colors(i, :), 'LineWidth', 2, 'DisplayName', sprintf('120°C, %d psi', Pressure(i)));
+end
+xlabel('Cycle Number');
+ylabel('Fracture Conductivity (mD-ft)');
+title('Temperature Effects on Fracture Conductivity Decay');
+legend show;
+grid on;
+hold off;
